@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AntiSniper #DynamicFeeManager #adaptiveFee single huge spike after day 1`] = `
+Array [
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+]
+`;
+
+exports[`AntiSniper #DynamicFeeManager #adaptiveFee single huge spike after initialization 1`] = `
+Array [
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+]
+`;
+
+exports[`AntiSniper #DynamicFeeManager #adaptiveFee single huge step after day 1`] = `
+Array [
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+]
+`;
+
+exports[`AntiSniper #DynamicFeeManager #adaptiveFee single huge step after initialization 1`] = `
+Array [
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+  "Fee: 10000 ",
+]
+`;
+
+exports[`AntiSniper AlgebraBasePluginV1 external methods #changeFeeConfiguration feeConfig getter gas cost [ @skip-on-coverage ] 1`] = `26481`;

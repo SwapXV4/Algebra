@@ -5,10 +5,9 @@ import {
   MockTimeAlgebraBasePluginV1,
   MockTimeDSFactory,
   BasePluginV1Factory,
-  AntiSniperPluginFactory,
-  AlgebraAntiSniperPluginV1,
-  MockTimeAlgebraAntiSniperPluginV1,
-  MockTimeAntiSniperPluginFactory,
+  MockTimeAntiSniper,
+  MockTimeAntiSniperFactory,
+  AntiSniperFactory,
 } from '../../typechain';
 
 type Fixture<T> = () => Promise<T>;
@@ -60,8 +59,8 @@ export const pluginFixture: Fixture<PluginFixture> = async function (): Promise<
 };
 
 interface AntiSnipePluginFixture extends MockFactoryFixture {
-  plugin: MockTimeAlgebraAntiSniperPluginV1;
-  mockPluginFactory: MockTimeAntiSniperPluginFactory;
+  plugin: MockTimeAntiSniper;
+  mockPluginFactory: MockTimeAntiSniperFactory;
   mockPool: MockPool;
 }
 
@@ -69,8 +68,8 @@ export const antiSniperPluginFixture: Fixture<AntiSnipePluginFixture> = async fu
   const { mockFactory } = await mockFactoryFixture();
   //const { token0, token1, token2 } = await tokensFixture()
 
-  const mockPluginFactoryFactory = await ethers.getContractFactory('MockTimeAntiSniperPluginFactory');
-  const mockPluginFactory = (await mockPluginFactoryFactory.deploy(mockFactory, TEST_FEE_RECEIVER)) as any as MockTimeAntiSniperPluginFactory;
+  const mockPluginFactoryFactory = await ethers.getContractFactory('MockTimeAntiSniperFactory');
+  const mockPluginFactory = (await mockPluginFactoryFactory.deploy(mockFactory, TEST_FEE_RECEIVER)) as any as MockTimeAntiSniperFactory;
 
   const mockPoolFactory = await ethers.getContractFactory('MockPool');
   const mockPool = (await mockPoolFactory.deploy()) as any as MockPool;
@@ -78,8 +77,10 @@ export const antiSniperPluginFixture: Fixture<AntiSnipePluginFixture> = async fu
   await mockPluginFactory.createPlugin(mockPool, ZERO_ADDRESS, ZERO_ADDRESS);
   const pluginAddress = await mockPluginFactory.pluginByPool(mockPool);
 
-  const mockDSOperatorFactory = await ethers.getContractFactory('MockTimeAlgebraAntiSniperPluginV1');
-  const plugin = mockDSOperatorFactory.attach(pluginAddress) as any as MockTimeAlgebraAntiSniperPluginV1;
+  const mockDSOperatorFactory = await ethers.getContractFactory('MockTimeAntiSniper');
+  const plugin = mockDSOperatorFactory.attach(pluginAddress) as any as MockTimeAntiSniper;
+
+  const mockPoolAddress = await mockPool.getAddress();
 
   return {
     plugin,
@@ -106,14 +107,14 @@ export const pluginFactoryFixture: Fixture<PluginFactoryFixture> = async functio
 };
 
 interface AntiSniperPluginFactoryFixture extends MockFactoryFixture {
-  pluginFactory: AntiSniperPluginFactory;
+  pluginFactory: AntiSniperFactory;
 }
 
 export const antiSniperPluginFactoryFixture: Fixture<AntiSniperPluginFactoryFixture> = async function (): Promise<AntiSniperPluginFactoryFixture> {
   const { mockFactory } = await mockFactoryFixture();
 
-  const pluginFactoryFactory = await ethers.getContractFactory('AntiSniperPluginFactory');
-  const pluginFactory = (await pluginFactoryFactory.deploy(mockFactory, TEST_FEE_RECEIVER)) as any as AntiSniperPluginFactory;
+  const pluginFactoryFactory = await ethers.getContractFactory('AntiSniperFactory');
+  const pluginFactory = (await pluginFactoryFactory.deploy(mockFactory, TEST_FEE_RECEIVER)) as any as AntiSniperFactory;
 
   return {
     pluginFactory,
