@@ -1,6 +1,6 @@
 const path = require('path');
 const config = require('dotenv').config({ path: path.resolve(__dirname, '.env') });
-const { ETHERSCAN_API_KEY, BSCSCAN_API_KEY, POLYGONSCAN_API_KEY, MNEMONIC, DEPLOY_GAS_LIMIT_MAX, DEPLOY_GAS_PRICE, INFURA_ID_PROJECT } =
+const { SONICSCAN_API_KEY, ETHERSCAN_API_KEY, BSCSCAN_API_KEY, POLYGONSCAN_API_KEY, MNEMONIC, DEPLOY_GAS_LIMIT_MAX, DEPLOY_GAS_PRICE, INFURA_ID_PROJECT } =
   config.parsed || {};
 
 export default {
@@ -103,11 +103,16 @@ export default {
       chainId: 10243,
       accounts: [`0x${MNEMONIC || '1000000000000000000000000000000000000000000000000000000000000000'}`],
     },
+    sonic: {
+      url: `https://rpc.soniclabs.com`,
+      chainId: 146,
+      accounts: [`0x${MNEMONIC || '1000000000000000000000000000000000000000000000000000000000000000'}`],
+    },
   },
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: `${POLYGONSCAN_API_KEY}`,
+    apiKey: `${SONICSCAN_API_KEY}`,
     customChains: [
       {
         network: 'seiTestnet',
@@ -155,6 +160,14 @@ export default {
         urls: {
           apiURL: 'https://api.routescan.io/v2/network/testnet/evm/57054/etherscan/api/',
           browserURL: 'https://artio.beratrail.io/',
+        },
+      },
+      {
+        network: 'sonic',
+        chainId: 146,
+        urls: {
+          apiURL: 'https://api.sonicscan.org/api',
+          browserURL: 'https://sonicscan.org/',
         },
       },
     ],
