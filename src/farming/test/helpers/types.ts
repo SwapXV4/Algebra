@@ -16,7 +16,7 @@ export module HelperTypes {
 
       rewardRate?: bigint;
       bonusRewardRate?: bigint;
-      minimalPositionWidth?: number;
+      maximalPositionWidth?: number;
       plugin?: string;
     };
     export type Result = {

@@ -1,5 +1,17 @@
 import { Wallet, MaxUint256, Interface } from 'ethers';
-import { blockTimestamp, BNe18, FeeAmount, getCurrentTick, maxGas, encodePath, arrayWrap, getMinTick, getMaxTick } from '../shared/index';
+import {
+  blockTimestamp,
+  BNe18,
+  FeeAmount,
+  getCurrentTick,
+  maxGas,
+  encodePath,
+  arrayWrap,
+  getMinTick,
+  getMaxTick,
+  MAX_TICK,
+  MIN_TICK,
+} from '../shared/index';
 import _ from 'lodash';
 import { TestERC20, INonfungiblePositionManager, AlgebraEternalFarming, IAlgebraPool, TestIncentiveId, FarmingCenter } from '../../typechain';
 import abi from '../../artifacts/contracts/farmings/EternalVirtualPool.sol/EternalVirtualPool.json';
@@ -121,7 +133,7 @@ export class HelperCommands {
         bonusReward: params.bonusReward,
         rewardRate: params.rewardRate || 10,
         bonusRewardRate: params.bonusRewardRate || 10,
-        minimalPositionWidth: params.minimalPositionWidth || 0,
+        maximalPositionWidth: params.maximalPositionWidth || MAX_TICK - MIN_TICK,
       },
       pluginAddres
     );

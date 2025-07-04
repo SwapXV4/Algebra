@@ -180,7 +180,7 @@ struct IncentiveParams {
   uint128 bonusReward;
   uint128 rewardRate;
   uint128 bonusRewardRate;
-  uint24 minimalPositionWidth;
+  uint24 maximalPositionWidth;
 }
 ```
 
@@ -234,7 +234,7 @@ The nonfungible position manager with which this farming contract is compatible
 ### incentives
 
 ```solidity
-function incentives(bytes32 incentiveId) external view returns (uint128 totalReward, uint128 bonusReward, address virtualPoolAddress, uint24 minimalPositionWidth, bool deactivated, address pluginAddress)
+function incentives(bytes32 incentiveId) external view returns (uint128 totalReward, uint128 bonusReward, address virtualPoolAddress, uint24 maximalPositionWidth, bool deactivated, address pluginAddress)
 ```
 **Selector**: `0x60777795`
 
@@ -251,7 +251,7 @@ Represents a farming incentive
 | totalReward | uint128 |  |
 | bonusReward | uint128 |  |
 | virtualPoolAddress | address |  |
-| minimalPositionWidth | uint24 |  |
+| maximalPositionWidth | uint24 |  |
 | deactivated | bool |  |
 | pluginAddress | address |  |
 
@@ -647,10 +647,10 @@ error pluginNotConnected()
 
 
 
-## minimalPositionWidthTooWide
+## maximalPositionWidthTooWide
 
 ```solidity
-error minimalPositionWidthTooWide()
+error maximalPositionWidthTooWide()
 ```
 **Selector**: `0x1db98911`
 
@@ -665,12 +665,12 @@ error zeroRewardAmount()
 
 
 
-## positionIsTooNarrow
+## positionIsTooWide
 
 ```solidity
-error positionIsTooNarrow()
+error positionIsTooWide()
 ```
-**Selector**: `0xeab05850`
+**Selector**: `0x50990b36`
 
 
 

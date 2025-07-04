@@ -44,7 +44,7 @@ struct Incentive {
   uint128 totalReward;
   uint128 bonusReward;
   address virtualPoolAddress;
-  uint24 minimalPositionWidth;
+  uint24 maximalPositionWidth;
   bool deactivated;
   address pluginAddress;
 }

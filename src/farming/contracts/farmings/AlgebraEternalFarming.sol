@@ -35,7 +35,7 @@ contract AlgebraEternalFarming is IAlgebraEternalFarming {
     uint128 totalReward;
     uint128 bonusReward;
     address virtualPoolAddress;
-    uint24 minimalPositionWidth;
+    uint24 maximalPositionWidth;
     bool deactivated;
     address pluginAddress;
   }
@@ -138,11 +138,11 @@ contract AlgebraEternalFarming is IAlgebraEternalFarming {
     if (params.reward == 0) revert zeroRewardAmount();
 
     unchecked {
-      if (int256(uint256(params.minimalPositionWidth)) > (int256(TickMath.MAX_TICK) - int256(TickMath.MIN_TICK)))
-        revert minimalPositionWidthTooWide();
+      if (int256(uint256(params.maximalPositionWidth)) > (int256(TickMath.MAX_TICK) - int256(TickMath.MIN_TICK)))
+        revert maximalPositionWidthTooWide();
     }
     newIncentive.virtualPoolAddress = virtualPool;
-    newIncentive.minimalPositionWidth = params.minimalPositionWidth;
+    newIncentive.maximalPositionWidth = params.maximalPositionWidth;
     newIncentive.pluginAddress = connectedPlugin;
 
     emit EternalFarmingCreated(
@@ -153,7 +153,7 @@ contract AlgebraEternalFarming is IAlgebraEternalFarming {
       key.nonce,
       params.reward,
       params.bonusReward,
-      params.minimalPositionWidth
+      params.maximalPositionWidth
     );
 
     _addRewards(IAlgebraEternalVirtualPool(virtualPool), params.reward, params.bonusReward, incentiveId);
@@ -441,7 +441,7 @@ contract AlgebraEternalFarming is IAlgebraEternalFarming {
     if (farms[tokenId][incentiveId].liquidity != 0) revert tokenAlreadyFarmed();
 
     virtualPool = incentive.virtualPoolAddress;
-    uint24 minimalAllowedTickWidth = incentive.minimalPositionWidth;
+    uint24 maximalAllowedTickWidth = incentive.maximalPositionWidth;
 
     if (_isIncentiveDeactivated(incentive)) revert incentiveStopped();
 
@@ -452,7 +452,7 @@ contract AlgebraEternalFarming is IAlgebraEternalFarming {
     if (liquidity == 0) revert zeroLiquidity();
 
     unchecked {
-      if (int256(tickUpper) - int256(tickLower) < int256(uint256(minimalAllowedTickWidth))) revert positionIsTooNarrow();
+      if (int256(tickUpper) - int256(tickLower) > int256(uint256(maximalAllowedTickWidth))) revert positionIsTooWide();
     }
 
     int24 tick = _getTickInPoolAndCheckLock(pool);

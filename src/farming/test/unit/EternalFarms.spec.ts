@@ -143,7 +143,7 @@ describe('unit/EternalFarms', () => {
             bonusReward: 100,
             rewardRate: 100,
             bonusRewardRate: 100,
-            minimalPositionWidth: 100,
+            maximalPositionWidth: 100,
           },
           await context.poolObj.connect(incentiveCreator).plugin()
         )
@@ -441,14 +441,14 @@ describe('unit/EternalFarms', () => {
         bonusReward,
         poolAddress: await context.poolObj.getAddress(),
         nonce: localNonce,
-        minimalPositionWidth: 2 ** 24 - 1,
+        maximalPositionWidth: 2 ** 24 - 1,
         rewardRate: 10n,
         bonusRewardRate: 50n,
       };
 
       await expect(helpers.createIncentiveFlow(incentiveArgs)).to.be.revertedWithCustomError(
         context.eternalFarming as AlgebraEternalFarming,
-        'minimalPositionWidthTooWide'
+        'maximalPositionWidthTooWide'
       );
     });
 

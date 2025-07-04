@@ -11,3 +11,6 @@ export const defaultTicksArray = (...args: any[]): [number, number] => {
   const { tickLower, tickUpper } = defaultTicks(...args);
   return [tickLower, tickUpper];
 };
+
+export const MIN_TICK = -887272;
+export const MAX_TICK = -MIN_TICK;

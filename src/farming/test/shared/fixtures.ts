@@ -20,6 +20,9 @@ import {
   abi as PLUGIN_ABI,
   bytecode as PLUGIN_BYTECODE,
 } from '@cryptoalgebra/integral-base-plugin/artifacts/contracts/AlgebraBasePluginV1.sol/AlgebraBasePluginV1.json';
+
+import AlgebraCommunityVaultJson from '@cryptoalgebra/integral-core/artifacts/contracts/AlgebraCommunityVault.sol/AlgebraCommunityVault.json';
+
 import {
   AlgebraEternalFarming,
   TestERC20,
@@ -137,8 +140,15 @@ export const algebraFactoryFixture: () => Promise<AlgebraFactoryFixture> = async
 
   const positionDescriptor = await NFTDescriptorFactory.deploy(tokens[0], 'ETH', []);
 
+  const AlgebraCommunityVaultFactory = await ethers.getContractFactory(AlgebraCommunityVaultJson.abi, AlgebraCommunityVaultJson.bytecode);
+
+  const factoryAddress = await factory.getAddress();
+  const algebraCommunityVault = await AlgebraCommunityVaultFactory.deploy(factoryAddress, deployer);
+
   const nftFactory = await ethers.getContractFactory(NonfungiblePositionManagerJson.abi, NonfungiblePositionManagerJson.bytecode);
-  const nft = (await nftFactory.deploy(factory, wnative, positionDescriptor, deployer)) as any as INonfungiblePositionManager;
+  const nft = (await nftFactory.deploy(factory, wnative, positionDescriptor, deployer, algebraCommunityVault)) as any as INonfungiblePositionManager;
+
+  await pluginFactory.addModifyLiquidityEntrypoint(nft);
   for (const token of tokens) {
     token.address = await token.getAddress();
   }

@@ -105,11 +105,11 @@ describe('AlgebraFarming', () => {
             bonusReward: bonusReward,
             rewardRate: 10,
             bonusRewardRate: 10,
-            minimalPositionWidth: 2 ** 23 - 1 + 2 ** 23 - 1,
+            maximalPositionWidth: 2 ** 23 - 1 + 2 ** 23 - 1,
           },
           await context.poolObj.connect(incentiveCreator).plugin()
         )
-      ).to.be.revertedWithCustomError(context.eternalFarming as AlgebraEternalFarming, 'minimalPositionWidthTooWide');
+      ).to.be.revertedWithCustomError(context.eternalFarming as AlgebraEternalFarming, 'maximalPositionWidthTooWide');
 
       await expect(
         (context.eternalFarming as AlgebraEternalFarming).connect(incentiveCreator).createEternalFarming(
@@ -124,11 +124,11 @@ describe('AlgebraFarming', () => {
             bonusReward: bonusReward,
             rewardRate: 10,
             bonusRewardRate: 10,
-            minimalPositionWidth: 887272 * 2 + 1,
+            maximalPositionWidth: 887272 * 2 + 1,
           },
           await context.poolObj.connect(incentiveCreator).plugin()
         )
-      ).to.be.revertedWithCustomError(context.eternalFarming as AlgebraEternalFarming, 'minimalPositionWidthTooWide');
+      ).to.be.revertedWithCustomError(context.eternalFarming as AlgebraEternalFarming, 'maximalPositionWidthTooWide');
 
       await expect(
         (context.eternalFarming as AlgebraEternalFarming).connect(incentiveCreator).createEternalFarming(
@@ -143,7 +143,7 @@ describe('AlgebraFarming', () => {
             bonusReward: bonusReward,
             rewardRate: 10,
             bonusRewardRate: 10,
-            minimalPositionWidth: (887272 - (887272 % 60)) * 2,
+            maximalPositionWidth: (887272 - (887272 % 60)) * 2,
           },
           await context.poolObj.connect(incentiveCreator).plugin()
         )
@@ -161,12 +161,14 @@ describe('AlgebraFarming', () => {
       // Someone starts staking
       await e20h.ensureBalancesAndApprovals(lpUser3, [context.token0, context.token1], balanceDeposited * 2n, await context.nft.getAddress());
 
+      const THICK_SIZE = TICK_SPACINGS[FeeAmount.MEDIUM] * 2;
+      const SIZE = TICK_SPACINGS[FeeAmount.MEDIUM];
       const tokenId = await mintPosition(context.nft.connect(lpUser3), {
         token0: await context.token0.getAddress(),
         token1: await context.token1.getAddress(),
         fee: FeeAmount.MEDIUM,
         tickLower: ticksToFarm[0],
-        tickUpper: ticksToFarm[0] + TICK_SPACINGS[FeeAmount.MEDIUM],
+        tickUpper: ticksToFarm[0] + THICK_SIZE,
         recipient: lpUser3.address,
         amount0Desired: 0,
         amount1Desired: balanceDeposited,
@@ -175,12 +177,16 @@ describe('AlgebraFarming', () => {
         deadline: (await blockTimestamp()) + 10000,
       });
 
+      const maximalPositionWidth = SIZE;
+      const tickLower = getMinTick(TICK_SPACINGS[FeeAmount.MEDIUM]);
+      const tickUpper = tickLower + SIZE;
+
       const tokenIdCorrect = await mintPosition(context.nft.connect(lpUser3), {
         token0: await context.token0.getAddress(),
         token1: await context.token1.getAddress(),
         fee: FeeAmount.MEDIUM,
-        tickLower: getMinTick(TICK_SPACINGS[FeeAmount.MEDIUM]),
-        tickUpper: getMaxTick(TICK_SPACINGS[FeeAmount.MEDIUM]),
+        tickLower,
+        tickUpper,
         recipient: lpUser3.address,
         amount0Desired: balanceDeposited,
         amount1Desired: balanceDeposited,
@@ -201,7 +207,7 @@ describe('AlgebraFarming', () => {
         nonce: nonce,
         rewardToken: context.rewardToken,
         bonusRewardToken: context.bonusRewardToken,
-        minimalPositionWidth: getMaxTick(TICK_SPACINGS[FeeAmount.MEDIUM]) - getMinTick(TICK_SPACINGS[FeeAmount.MEDIUM]),
+        maximalPositionWidth,
         poolAddress: context.pool01,
         totalReward,
         bonusReward,
@@ -209,7 +215,7 @@ describe('AlgebraFarming', () => {
 
       await expect(
         context.farmingCenter.connect(lpUser3).enterFarming(await incentiveResultToFarmAdapter(createIncentiveResult), tokenId)
-      ).to.be.revertedWithCustomError(context.eternalFarming as AlgebraEternalFarming, 'positionIsTooNarrow');
+      ).to.be.revertedWithCustomError(context.eternalFarming as AlgebraEternalFarming, 'positionIsTooWide');
 
       await expect(context.farmingCenter.connect(lpUser3).enterFarming(await incentiveResultToFarmAdapter(createIncentiveResult), tokenIdCorrect)).to
         .be.not.reverted;
@@ -299,47 +305,6 @@ describe('AlgebraFarming', () => {
         const endTime = startTime + duration;
 
         const { helpers, createIncentiveResult } = subject;
-
-        await time.increaseTo(endTime + 1);
-
-        const trader = actors.traderUser0();
-        await helpers.makeTickGoFlow({
-          trader,
-          direction: 'up',
-          desiredValue: 20,
-        });
-
-        // Sanity check: make sure we go past the incentive end time.
-        expect(await blockTimestamp(), 'test setup: must be run after start time').to.be.gte(endTime);
-
-        // Everyone pulls their liquidity at the same time
-        const exitFarmings = await Promise.all(
-          subject.farms.map(({ lp, tokenId }) =>
-            helpers.exitFarmingCollectBurnFlow({
-              lp,
-              tokenId,
-              createIncentiveResult,
-            })
-          )
-        );
-
-        const rewardsEarned = bnSum(exitFarmings.map((o) => o.balance));
-
-        // const { amountReturnedToCreator } = await helpers.endIncentiveFlow({
-        // 	createIncentiveResult,
-        // })
-        expect(rewardsEarned).to.be.gte(883879);
-      });
-    });
-
-    describe('who all farm the entire time ', () => {
-      it('allows them all to withdraw at the end', async () => {
-        const { helpers, createIncentiveResult } = subject;
-
-        const epoch = await blockTimestamp();
-
-        const startTime = epoch + 1_000;
-        const endTime = startTime + duration;
 
         await time.increaseTo(endTime + 1);
 

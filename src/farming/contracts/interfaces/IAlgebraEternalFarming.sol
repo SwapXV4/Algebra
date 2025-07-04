@@ -13,7 +13,7 @@ interface IAlgebraEternalFarming {
     uint128 bonusReward; // The amount of bonus reward tokens to be distributed
     uint128 rewardRate; // The rate of reward distribution per second
     uint128 bonusRewardRate; // The rate of bonus reward distribution per second
-    uint24 minimalPositionWidth; // The minimal allowed width of position (tickUpper - tickLower)
+    uint24 maximalPositionWidth; // The maximal allowed width of position (tickUpper - tickLower)
   }
 
   error farmDoesNotExist();
@@ -23,10 +23,10 @@ interface IAlgebraEternalFarming {
   error anotherFarmingIsActive();
   error pluginNotConnected();
 
-  error minimalPositionWidthTooWide();
+  error maximalPositionWidthTooWide();
   error zeroRewardAmount();
 
-  error positionIsTooNarrow();
+  error positionIsTooWide();
   error zeroLiquidity();
   error invalidPool();
   error claimToZeroAddress();
@@ -58,7 +58,7 @@ interface IAlgebraEternalFarming {
       uint128 totalReward,
       uint128 bonusReward,
       address virtualPoolAddress,
-      uint24 minimalPositionWidth,
+      uint24 maximalPositionWidth,
       bool deactivated,
       address pluginAddress
     );
